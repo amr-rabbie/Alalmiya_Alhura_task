@@ -1,5 +1,6 @@
 package com.amrrabbie.alalmiyaalhuratask.ui.openweather
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -24,6 +25,7 @@ class OpenWeatherActivity : AppCompatActivity() {
     lateinit var openWeatherAdapterOffline: OpenWeatherAdapterOffline
     val openWeatherViewModel:OpenWeatherViewModel by viewModels()
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
