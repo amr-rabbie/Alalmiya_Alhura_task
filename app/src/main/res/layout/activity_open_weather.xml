@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.openweather.OpenWeatherActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#C0C0C0"
+        android:weightSum="3"
+        >
+        <EditText
+            android:id="@+id/edtcity"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="@dimen/_48sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:hint="mansoura,eg"
+            android:textColor="@color/purple_500"
+            android:textColorHint="@color/purple_500"
+            android:background="@drawable/editteststyle"
+            android:paddingStart="@dimen/_10sdp"
+            />
+
+        <Button
+            android:id="@+id/btnsearch"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/_48sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/buttonstyle"
+            android:textColor="#FFFFFF"
+            android:text="@string/search"/>
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginBottom="@dimen/_15sdp">
+
+        <ProgressBar
+            android:id="@+id/pbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:theme="@style/progressbarstyle"
+            android:layout_gravity="center"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/weather_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"/>
+
+
+    </FrameLayout>
+
+</LinearLayout>

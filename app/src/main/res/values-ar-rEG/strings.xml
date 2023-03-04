@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">تسك العالمية الحرة</string>
+    <string name="temperature">درجة الحرارة</string>
+    <string name="humdity">الرطوبة</string>
+    <string name="pressure">الضغط</string>
+    <string name="wind_speed">سرعة الرياح</string>
+    <string name="visibility">الرؤية</string>
+</resources>

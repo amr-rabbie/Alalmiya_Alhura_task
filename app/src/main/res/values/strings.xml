@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Alalmiya Alhura task</string>
+    <string name="temperature">Temperature</string>
+    <string name="humdity">Humidity</string>
+    <string name="pressure">Pressure</string>
+    <string name="wind_speed">Wind Speed</string>
+    <string name="visibility">Visibility</string>
+    <string name="time">Time</string>
+    <string name="search">Search</string>
+</resources>
