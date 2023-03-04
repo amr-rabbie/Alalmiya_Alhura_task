@@ -1,5 +1,6 @@
 package com.amrrabbie.alalmiyaalhuratask.di
 
+import com.amrrabbie.data.db.WeatherDao
 import com.amrrabbie.data.remote.OpenWeatherApiService
 import com.amrrabbie.data.repo.OpenWeatherRepoImpl
 import com.amrrabbie.domain.repo.OpenWeatherRepo
@@ -13,6 +14,6 @@ import dagger.hilt.components.SingletonComponent
 object RepoModule {
 
     @Provides
-    fun provideOpenWeatherRepo(openWeatherApiService: OpenWeatherApiService):OpenWeatherRepo=
-        OpenWeatherRepoImpl(openWeatherApiService)
+    fun provideOpenWeatherRepo(openWeatherApiService: OpenWeatherApiService,weatherDao: WeatherDao):OpenWeatherRepo=
+        OpenWeatherRepoImpl(openWeatherApiService,weatherDao)
 }

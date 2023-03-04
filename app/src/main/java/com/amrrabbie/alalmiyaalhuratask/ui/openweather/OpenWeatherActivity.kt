@@ -3,13 +3,16 @@ package com.amrrabbie.alalmiyaalhuratask.ui.openweather
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amrrabbie.alalmiyaalhu.OpenWeatherAdapter
-import com.amrrabbie.alalmiyaalhuratask.R
 import com.amrrabbie.alalmiyaalhuratask.databinding.ActivityOpenWeatherBinding
 import com.amrrabbie.domain.entity.openweather.ListItem
+import com.amrrabbie.domain.entity.openweather.OpenWeatherResponse
+import com.amrrabbie.domain.entity.openweather.Weather
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,6 +20,7 @@ class OpenWeatherActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityOpenWeatherBinding
     lateinit var openWeatherAdapter: OpenWeatherAdapter
+    lateinit var openWeatherAdapterOffline: OpenWeatherAdapterOffline
     val openWeatherViewModel:OpenWeatherViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,8 +40,28 @@ class OpenWeatherActivity : AppCompatActivity() {
         try{
             loadDataFromNetwork()
         }catch (ex:Exception){
-
+            loadDataFromDb()
         }
+    }
+
+    private fun loadDataFromDb() {
+        startLoading()
+        openWeatherViewModel.getWeatherByCity(binding.edtcity.text.toString())
+
+        openWeatherViewModel.weatherList.observe(this, Observer { response ->
+            if(! response.isNullOrEmpty()){
+                openWeatherAdapterOffline= OpenWeatherAdapterOffline(this,response)
+                binding.weatherRv.apply {
+                    adapter=openWeatherAdapterOffline
+                    hasFixedSize()
+                    layoutManager=LinearLayoutManager(this@OpenWeatherActivity,LinearLayoutManager.HORIZONTAL,false)
+                }
+                hideLoading()
+            }else{
+                Toast.makeText(this,"error hapened , try again",Toast.LENGTH_LONG).show()
+                hideLoading()
+            }
+        })
     }
 
     private fun loadDataFromNetwork() {
@@ -48,6 +72,9 @@ class OpenWeatherActivity : AppCompatActivity() {
 
             openWeatherViewModel.weather.collect{
                 it?.let {
+
+                    deleteWeatherByCity(it)
+
                     openWeatherAdapter= OpenWeatherAdapter(this@OpenWeatherActivity, it.list as List<ListItem>)
 
                     binding.weatherRv.apply {
@@ -58,6 +85,24 @@ class OpenWeatherActivity : AppCompatActivity() {
                     hideLoading()
                 }
             }
+        }
+    }
+
+    private fun deleteWeatherByCity(openWeatherResponse: OpenWeatherResponse) {
+        openWeatherViewModel.deleteWeatherByCity(binding.edtcity.text.toString())
+        insertWeatherInDb(openWeatherResponse.list)
+    }
+
+    private fun insertWeatherInDb(list: List<ListItem?>?) {
+        list?.let{
+            for(weather in list){
+                var mweather=Weather(binding.edtcity.text.toString(),weather?.weather!![0]?.description!! ,weather?.weather!![0]?.icon!!,
+                    weather.main?.temp.toString(),weather.main?.humidity.toString(),weather.main?.pressure.toString(),
+                    weather.wind?.speed.toString(),weather.visibility.toString(),weather.dtTxt!!)
+
+                openWeatherViewModel.insertWeather(mweather)
+            }
+
         }
     }
 
