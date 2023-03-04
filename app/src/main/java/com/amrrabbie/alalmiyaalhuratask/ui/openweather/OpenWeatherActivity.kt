@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androiddeveloper.amrrabbie.kotlinapidb.utils.Network
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -30,18 +31,53 @@ class OpenWeatherActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnsearch.setOnClickListener {
+            if(binding.edtcity.text.toString().isEmpty())
+                Toast.makeText(this,"must enter city",Toast.LENGTH_LONG).show()
+                else
             bindOpenWeatherData()
         }
-
 
     }
 
     private fun bindOpenWeatherData() {
-        try{
+        if (Network.isNetworkAvailable(this))
             loadDataFromNetwork()
-        }catch (ex:Exception){
+        else
             loadDataFromDb()
-        }
+    }
+
+    private fun loadDataFromNetwork() {
+
+            startLoading()
+
+            lifecycleScope.launchWhenCreated {
+                openWeatherViewModel.getOpenWeatherFromNetwork(
+                    binding.edtcity.text.toString(),
+                    "3a46b8f5a2e3d2fcd6c5083afc261630"
+                )
+
+                openWeatherViewModel.weather.collect {
+                    it?.let {
+
+                        deleteWeatherByCity(it)
+
+                        openWeatherAdapter =
+                            OpenWeatherAdapter(this@OpenWeatherActivity, it.list as List<ListItem>)
+
+                        binding.weatherRv.apply {
+                            adapter = openWeatherAdapter
+                            hasFixedSize()
+                            layoutManager = LinearLayoutManager(
+                                this@OpenWeatherActivity,
+                                LinearLayoutManager.HORIZONTAL,
+                                false
+                            )
+                        }
+                        hideLoading()
+                    }
+                }
+            }
+
     }
 
     private fun loadDataFromDb() {
@@ -62,30 +98,6 @@ class OpenWeatherActivity : AppCompatActivity() {
                 hideLoading()
             }
         })
-    }
-
-    private fun loadDataFromNetwork() {
-        startLoading()
-
-        lifecycleScope.launchWhenCreated {
-            openWeatherViewModel.getOpenWeatherFromNetwork(binding.edtcity.text.toString(),"3a46b8f5a2e3d2fcd6c5083afc261630")
-
-            openWeatherViewModel.weather.collect{
-                it?.let {
-
-                    deleteWeatherByCity(it)
-
-                    openWeatherAdapter= OpenWeatherAdapter(this@OpenWeatherActivity, it.list as List<ListItem>)
-
-                    binding.weatherRv.apply {
-                        adapter=openWeatherAdapter
-                        hasFixedSize()
-                        layoutManager=LinearLayoutManager(this@OpenWeatherActivity,LinearLayoutManager.HORIZONTAL,false)
-                    }
-                    hideLoading()
-                }
-            }
-        }
     }
 
     private fun deleteWeatherByCity(openWeatherResponse: OpenWeatherResponse) {
