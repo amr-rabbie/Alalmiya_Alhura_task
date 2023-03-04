@@ -31,6 +31,8 @@ class OpenWeatherAdapter (val context: Context, val list:List<ListItem>) : Recyc
                 val time =weather.dtTxt
                 txttime.text=time!!.substring(time.indexOf(" ") + 1)
 
+                txtdate.text=time!!.substring(0,time!!.indexOf(" "))
+
                 imgicon.load( "http://openweathermap.org/img/w/" + weather.weather!![0]!!.icon + ".png"){
                     crossfade(1000)
                     crossfade(true)

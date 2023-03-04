@@ -6,4 +6,7 @@
     <string name="pressure">الضغط</string>
     <string name="wind_speed">سرعة الرياح</string>
     <string name="visibility">الرؤية</string>
+    <string name="time">الوقت</string>
+    <string name="search">بحث</string>
+    <string name="date">التاريخ</string>
 </resources>
